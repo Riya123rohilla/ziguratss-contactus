@@ -75,15 +75,6 @@ const ContactInfo = () => {
           </div>
         )}
       </div>
-
-      <div className="call-section" ref={callBoxRef}>
-        <h3>GIVE US A CALL</h3>
-        <p>Want to speak with a sales representative? Drop us a line and we'd be happy to answer any questions!</p>
-        <a href="tel:+917838535496" className="phone-link">
-          <span className="phone-icon">📞</span>
-          (+91) 7838535496
-        </a>
-      </div>
     </div>
   );
 };
