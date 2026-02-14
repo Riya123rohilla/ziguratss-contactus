@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ContactInfo from '../components/ContactInfo';
@@ -7,22 +7,9 @@ import Navbar from '../components/Navbar';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const bannerImages = [
-  'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=1600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=1600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=1600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=1600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1549887534-1541e9326642?w=1600&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=1600&h=600&fit=crop'
-];
-
 const Contact = () => {
-  const heroRef = useRef(null);
-  const headingRef = useRef(null);
   const featureBoxesRef = useRef([]);
-  const titleRef = useRef(null);
   const reachUsRef = useRef(null);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     // Animate info cards
