@@ -12,7 +12,6 @@ const Contact = () => {
   const reachUsRef = useRef(null);
 
   useEffect(() => {
-    // Animate info cards
     featureBoxesRef.current.forEach((box, index) => {
       if (box) {
         gsap.fromTo(
@@ -58,7 +57,7 @@ const Contact = () => {
       );
     }
 
-    // Gallery items animation
+    
     const galleryItems = document.querySelectorAll('.gallery-item');
     galleryItems.forEach((item, index) => {
       gsap.fromTo(
@@ -79,7 +78,6 @@ const Contact = () => {
       );
     });
 
-    // Feature boxes animation
     const featureBoxes = document.querySelectorAll('.feature-box');
     featureBoxes.forEach((box, index) => {
       gsap.fromTo(
