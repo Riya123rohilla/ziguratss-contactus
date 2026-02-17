@@ -107,129 +107,119 @@ const Contact = () => {
     <div className="contact-page">
       <Navbar />
       
-      {/* Hero Section with Image */}
-      <section className="contact-hero">
-        <div className="hero-overlay"></div>
-        <div className="hero-content-wrapper">
-          <h1 className="hero-main-title">Contact Zigguratss</h1>
-          <p className="hero-description">
-            Have questions about our artworks? Want to collaborate with our artists? 
-            We're here to help you discover the perfect piece for your collection.
-          </p>
-          <a href="#contact-form" className="cta-button">Get In Touch</a>
+      {/* Animated Background Section - First */}
+      <section className="animated-cta-section">
+        <div className="floating-shapes">
+          <div className="shape shape-1"></div>
+          <div className="shape shape-2"></div>
+          <div className="shape shape-3"></div>
+          <div className="shape shape-4"></div>
+          <div className="shape shape-5"></div>
         </div>
+        <div className="cta-content">
+          <h2 className="cta-heading">
+            <span className="cta-line">CREATE</span>
+            <span className="cta-line cta-gold">SOMETHING</span>
+            <span className="cta-line">EXTRAORDINARY</span>
+          </h2>
+          <p className="cta-subtitle">Let's bring your artistic vision to life</p>
+          <a href="#contact-form" className="cta-btn-modern">
+            <span>Start Your Project</span>
+            <div className="cta-btn-shine"></div>
+          </a>
+        </div>
+        <div className="scroll-indicator"></div>
       </section>
 
-      {/* Contact Info Cards */}
-      <section className="info-cards-section">
-        <div className="info-cards-container">
-          <div className="info-card" ref={el => featureBoxesRef.current[0] = el}>
-            <div className="card-icon">📍</div>
-            <h3>Find Us</h3>
-            <p>New Delhi<br/>India</p>
+      {/* Hero Section with Form */}
+      <section className="contact-hero-elicyon" id="contact-form">
+        <div className="hero-content-elicyon">
+          <div className="hero-text-elicyon">
+            <h1 className="hero-title-elicyon">
+              EVERY ARTWORK STARTS <span className="with-text">with a</span> VISION.<br/>
+              LET'S START YOURS
+            </h1>
           </div>
           
-          <div className="info-card" ref={el => featureBoxesRef.current[1] = el}>
-            <div className="card-icon">📞</div>
-            <h3>Call Us</h3>
-            <p><a href="tel:+917838535496">(+91) 7838535496</a></p>
-          </div>
-          
-          <div className="info-card" ref={el => featureBoxesRef.current[2] = el}>
-            <div className="card-icon">📅</div>
-            <h3>Book Online</h3>
-            <p>Schedule An Appointment</p>
-            <a href="#contact-form" className="card-link">Book Now →</a>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form Section */}
-      <section className="contact-form-section" id="contact-form" ref={reachUsRef}>
-        <div className="form-container">
-          <div className="form-text-content">
-            <h2>Send Us A Message</h2>
-            <p>Feel free to reach out with any questions about our artworks, artist collaborations, or gallery visits. We'd love to hear from you!</p>
-          </div>
-          <div className="form-wrapper">
+          <div className="hero-form-container">
             <ContactForm />
           </div>
         </div>
       </section>
 
-      {/* Map and Additional Info */}
-      <section className="map-info-section">
-        <div className="map-container">
-          <ContactInfo />
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="features-section">
-        <div className="features-container">
-          <div className="feature-box">
-            <div className="feature-icon">🚚</div>
-            <h4>FREE SHIPPING WORLD WIDE</h4>
-            <p>By Professionals</p>
-          </div>
-          <div className="feature-box">
-            <div className="feature-icon">💰</div>
-            <h4>MONEY BACK GUARANTEE</h4>
-            <p>Within 14 days after delivery</p>
-          </div>
-          <div className="feature-box">
-            <div className="feature-icon">🎨</div>
-            <h4>SELECTED ARTIST</h4>
-            <p>Artist's around the world</p>
-          </div>
-          <div className="feature-box">
-            <div className="feature-icon">🔒</div>
-            <h4>SECURE PAYMENTS</h4>
-            <p>By credit card or online</p>
-          </div>
-        </div>
-      </section>
-
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-sections">
-            <div className="footer-section">
-              <p className="section-label">Try Us !</p>
-              <h4>FOR BUYERS</h4>
-              <a href="https://zigguratss.com/cms/customer-guide">Customer Guide</a>
-            </div>
-            
-            <div className="footer-section">
-              <p className="section-label">Use Us !</p>
-              <h4>FOR ARTISTS</h4>
-              <a href="https://zigguratss.com/cms/artist-guide">Artist Guide</a>
-            </div>
-            
-            <div className="footer-section">
-              <p className="section-label">Talk to Us !</p>
-              <h4>ZIGGURATSS ART</h4>
-              <a href="https://zigguratss.com/cms/terms-and-conditions">Terms and Conditions</a>
-              <a href="https://zigguratss.com/cms/contest-rules">Contest Rules</a>
-              <a href="https://zigguratss.com/about/">About us</a>
-              <a href="https://zigguratss.com/faq">FAQs</a>
-              <a href="https://zigguratss.com/blog">Blog</a>
-            </div>
-            
-            <div className="footer-section">
-              <p className="section-label">We are Social !</p>
-              <h4>FOLLOW US</h4>
-              <div className="social-icons">
-                <a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer">f</a>
-                <a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer">in</a>
-                <a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer">ig</a>
-                <a href="https://in.pinterest.com/zigguratss/" target="_blank" rel="noopener noreferrer">p</a>
+      {/* Contact Information Grid */}
+      <section className="contact-info-grid-section">
+        <div className="contact-info-container">
+          <div className="contact-info-column">
+            <h3 className="contact-column-title">GENERAL<br/>ENQUIRIES</h3>
+            <div className="contact-details-list">
+              <div className="contact-detail-group">
+                <h4>STUDIO</h4>
+                <p><a href="mailto:contact@zigguratss.com">contact@zigguratss.com</a></p>
+                <p><a href="tel:+917838535496">+91 7838535496</a></p>
               </div>
             </div>
           </div>
-          
-          <div className="footer-bottom">
-            <p>Copyright © 2026 Zigguratss Artwork LLP. All Rights Reserved.</p>
+
+          <div className="contact-info-column">
+            <h3 className="contact-column-title">CONNECT<br/>WITH US</h3>
+            <div className="contact-details-list">
+              <div className="contact-detail-group">
+                <h4>SOCIAL</h4>
+                <p><a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer">Facebook</a></p>
+                <p><a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
+                <p><a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer">Instagram</a></p>
+              </div>
+            </div>
           </div>
+
+          <div className="contact-info-column">
+            <h3 className="contact-column-title">OUR<br/>LOCATION</h3>
+            <div className="contact-details-list">
+              <div className="contact-detail-group">
+                <p>New Delhi<br/>India</p>
+                <p className="visit-note">Visits by appointment only</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Minimalist Footer */}
+      <footer className="footer-modern">
+        <div className="footer-modern-content">
+          <div className="footer-brand">
+            <h3>ZIGGURATSS</h3>
+            <p>Artwork Excellence Since 2020</p>
+          </div>
+          
+          <div className="footer-links-grid">
+            <div className="footer-col">
+              <h4>Explore</h4>
+              <a href="https://zigguratss.com/about/">About</a>
+              <a href="https://zigguratss.com/blog">Journal</a>
+              <a href="https://zigguratss.com/faq">FAQs</a>
+            </div>
+            
+            <div className="footer-col">
+              <h4>Resources</h4>
+              <a href="https://zigguratss.com/cms/customer-guide">Buyer's Guide</a>
+              <a href="https://zigguratss.com/cms/artist-guide">Artist's Guide</a>
+              <a href="https://zigguratss.com/cms/terms-and-conditions">Terms</a>
+            </div>
+            
+            <div className="footer-col">
+              <h4>Connect</h4>
+              <a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer">Facebook</a>
+              <a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer">Instagram</a>
+              <a href="https://in.pinterest.com/zigguratss/" target="_blank" rel="noopener noreferrer">Pinterest</a>
+            </div>
+          </div>
+        </div>
+        
+        <div className="footer-bottom-modern">
+          <p>© 2026 Zigguratss Artwork LLP. All Rights Reserved.</p>
         </div>
       </footer>
     </div>
