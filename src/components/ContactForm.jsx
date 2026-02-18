@@ -18,7 +18,8 @@ const ContactForm = () => {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    // Form slide up animation
+    // Form slide up animation - set visible immediately, then animate
+    gsap.set(formRef.current, { opacity: 1, y: 0 });
     gsap.fromTo(
       formRef.current,
       { opacity: 0, y: 40 },
@@ -27,10 +28,7 @@ const ContactForm = () => {
         y: 0,
         duration: 1,
         ease: 'power3.out',
-        scrollTrigger: {
-          trigger: formRef.current,
-          start: 'top 80%',
-        }
+        delay: 0.3,
       }
     );
 
@@ -40,7 +38,7 @@ const ContactForm = () => {
     button.addEventListener('mouseenter', () => {
       gsap.to(button, {
         scale: 1.05,
-        backgroundColor: '#45a049',
+        backgroundColor: '#d4af37',
         duration: 0.3,
         ease: 'power2.out'
       });
@@ -49,7 +47,7 @@ const ContactForm = () => {
     button.addEventListener('mouseleave', () => {
       gsap.to(button, {
         scale: 1,
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#000000',
         duration: 0.3,
         ease: 'power2.out'
       });

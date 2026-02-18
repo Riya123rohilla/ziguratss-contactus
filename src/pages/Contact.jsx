@@ -98,8 +98,129 @@ const Contact = () => {
       );
     });
 
+    // Blur effect on scroll
+    const sections = document.querySelectorAll('.contact-page section');
+    
+    const observerOptions = {
+      root: null,
+      threshold: 0.5,
+      rootMargin: '0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Section is in view - clear
+          entry.target.style.filter = 'blur(0px)';
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'scale(1) translateZ(0)';
+        } else {
+          // Section is out of view - blur
+          entry.target.style.filter = 'blur(3px)';
+          entry.target.style.opacity = '0.7';
+          entry.target.style.transform = 'scale(0.98) translateZ(-50px)';
+        }
+      });
+    }, observerOptions);
+
+    sections.forEach((section) => {
+      observer.observe(section);
+    });
+
+    // Parallax effect on scroll
+    let lastScrollTop = 0;
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        const scrollPercent = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+        
+        // Parallax movement
+        const parallaxSpeed = 50;
+        const yOffset = (scrollPercent - 0.5) * parallaxSpeed;
+        
+        // 3D rotation based on scroll
+        const rotateX = Math.max(-5, Math.min(5, (scrollPercent - 0.5) * 10));
+        
+        // Add parallax and rotation effects
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          const elements = section.querySelectorAll('.cta-content, .vision-split-container, .services-container, .contact-info-container, .footer-modern-content');
+          elements.forEach(el => {
+            if (el) {
+              gsap.to(el, {
+                y: yOffset * -1,
+                rotateX: rotateX,
+                duration: 0.3,
+                ease: 'power1.out'
+              });
+            }
+          });
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Mouse move parallax effect
+    const handleMouseMove = (e) => {
+      const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          const shapes = section.querySelectorAll('.shape, .floating-shapes');
+          shapes.forEach((shape) => {
+            if (shape) {
+              gsap.to(shape, {
+                x: mouseX * 30,
+                y: mouseY * 30,
+                duration: 1,
+                ease: 'power2.out'
+              });
+            }
+          });
+        }
+      });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+
+    // Contact info cards animation using IntersectionObserver
+    const contactCards = document.querySelectorAll('.contact-info-card');
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const card = entry.target;
+          const index = Array.from(contactCards).indexOf(card);
+          gsap.fromTo(
+            card,
+            { opacity: 0, y: 60, scale: 0.92 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              delay: index * 0.15,
+              ease: 'power3.out',
+            }
+          );
+          cardObserver.unobserve(card);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    contactCards.forEach((card) => cardObserver.observe(card));
+
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      observer.disconnect();
+      cardObserver.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
@@ -124,25 +245,86 @@ const Contact = () => {
           </h2>
           <p className="cta-subtitle">Let's bring your artistic vision to life</p>
           <a href="#contact-form" className="cta-btn-modern">
-            <span>Start Your Project</span>
+            <span>Contact Us</span>
             <div className="cta-btn-shine"></div>
           </a>
         </div>
         <div className="scroll-indicator"></div>
       </section>
 
-      {/* Hero Section with Form */}
-      <section className="contact-hero-elicyon" id="contact-form">
-        <div className="hero-content-elicyon">
-          <div className="hero-text-elicyon">
-            <h1 className="hero-title-elicyon">
-              EVERY ARTWORK STARTS <span className="with-text">with a</span> VISION.<br/>
+      {/* Vision Statement Section - Page 2 */}
+      <section className="vision-statement-section">
+        <div className="vision-split-container">
+          <div className="vision-left">
+            <h2 className="vision-title">
+              EVERY ARTWORK STARTS <span className="with-text-vision">with a</span> VISION.<br/>
               LET'S START YOURS
-            </h1>
+            </h2>
+            <div className="vision-underline"></div>
           </div>
           
-          <div className="hero-form-container">
-            <ContactForm />
+          <div className="vision-right">
+            <div className="vision-form-wrapper">
+              <h3 className="vision-form-title">Get in Touch</h3>
+              <ContactForm />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Showcase Section */}
+      <section className="services-showcase-section">
+        <div className="services-container">
+          <h2 className="services-title">OUR <span className="gold-text">SERVICES</span></h2>
+          
+          <div className="services-grid">
+            <div className="service-card">
+              <div className="service-icon">🎨</div>
+              <h3>Custom Artwork</h3>
+              <p>Original pieces tailored to your specifications</p>
+              <ul className="service-list">
+                <li>Oil & Acrylic Paintings</li>
+                <li>Watercolor & Mixed Media</li>
+                <li>Digital Art</li>
+                <li>Sculptures</li>
+              </ul>
+            </div>
+            
+            <div className="service-card">
+              <div className="service-icon">🖼️</div>
+              <h3>Art Restoration</h3>
+              <p>Breathe new life into cherished pieces</p>
+              <ul className="service-list">
+                <li>Damage Assessment</li>
+                <li>Color Restoration</li>
+                <li>Frame Repair</li>
+                <li>Preservation</li>
+              </ul>
+            </div>
+            
+            <div className="service-card">
+              <div className="service-icon">💼</div>
+              <h3>Corporate Art</h3>
+              <p>Elevate your business environment</p>
+              <ul className="service-list">
+                <li>Office Installations</li>
+                <li>Brand Artwork</li>
+                <li>Wall Murals</li>
+                <li>Art Consultation</li>
+              </ul>
+            </div>
+            
+            <div className="service-card">
+              <div className="service-icon">🏛️</div>
+              <h3>Gallery Services</h3>
+              <p>Professional curation and display</p>
+              <ul className="service-list">
+                <li>Exhibition Design</li>
+                <li>Lighting Setup</li>
+                <li>Collection Management</li>
+                <li>Art Advisory</li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
@@ -150,38 +332,44 @@ const Contact = () => {
       {/* Contact Information Grid */}
       <section className="contact-info-grid-section">
         <div className="contact-info-container">
-          <div className="contact-info-column">
-            <h3 className="contact-column-title">GENERAL<br/>ENQUIRIES</h3>
-            <div className="contact-details-list">
-              <div className="contact-detail-group">
-                <h4>STUDIO</h4>
-                <p><a href="mailto:contact@zigguratss.com">contact@zigguratss.com</a></p>
-                <p><a href="tel:+917838535496">+91 7838535496</a></p>
-              </div>
+
+          {/* Card 1 - General Enquiries */}
+          <div className="contact-info-card" data-delay="0">
+            <div className="contact-card-icon">✉️</div>
+            <h3 className="contact-card-title">GENERAL<br/>ENQUIRIES</h3>
+            <div className="contact-card-divider"></div>
+            <div className="contact-card-body">
+              <span className="contact-card-label">STUDIO</span>
+              <a href="mailto:contact@zigguratss.com" className="contact-card-link">contact@zigguratss.com</a>
+              <a href="tel:+917838535496" className="contact-card-link">+91 7838535496</a>
             </div>
           </div>
 
-          <div className="contact-info-column">
-            <h3 className="contact-column-title">CONNECT<br/>WITH US</h3>
-            <div className="contact-details-list">
-              <div className="contact-detail-group">
-                <h4>SOCIAL</h4>
-                <p><a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer">Facebook</a></p>
-                <p><a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
-                <p><a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer">Instagram</a></p>
-              </div>
+          {/* Card 2 - Connect With Us */}
+          <div className="contact-info-card" data-delay="1">
+            <div className="contact-card-icon">🌐</div>
+            <h3 className="contact-card-title">CONNECT<br/>WITH US</h3>
+            <div className="contact-card-divider"></div>
+            <div className="contact-card-body">
+              <span className="contact-card-label">SOCIAL</span>
+              <a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer" className="contact-card-link">Facebook</a>
+              <a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer" className="contact-card-link">LinkedIn</a>
+              <a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="contact-card-link">Instagram</a>
             </div>
           </div>
 
-          <div className="contact-info-column">
-            <h3 className="contact-column-title">OUR<br/>LOCATION</h3>
-            <div className="contact-details-list">
-              <div className="contact-detail-group">
-                <p>New Delhi<br/>India</p>
-                <p className="visit-note">Visits by appointment only</p>
-              </div>
+          {/* Card 3 - Location */}
+          <div className="contact-info-card" data-delay="2">
+            <div className="contact-card-icon">📍</div>
+            <h3 className="contact-card-title">OUR<br/>LOCATION</h3>
+            <div className="contact-card-divider"></div>
+            <div className="contact-card-body">
+              <span className="contact-card-label">ADDRESS</span>
+              <p className="contact-card-text">New Delhi<br/>India</p>
+              <p className="contact-card-note">Visits by appointment only</p>
             </div>
           </div>
+
         </div>
       </section>
 
