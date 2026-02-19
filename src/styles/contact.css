@@ -2042,7 +2042,7 @@ body {
   color: #b89a30;
 }
 
-/* Map Section */
+
 .map-section-elicyon {
   background: #f5f5f5;
   padding: 100px 60px;
@@ -2053,7 +2053,6 @@ body {
   margin: 0 auto;
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   .hero-content-elicyon {
     grid-template-columns: 1fr;
