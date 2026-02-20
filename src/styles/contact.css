@@ -1270,6 +1270,9 @@ body {
 /* ===== NEW DESIGN STYLES ===== */
 
 /* Vision Statement Section - Page 2 */
+/* =============================================
+   VISION / GET IN TOUCH SECTION
+   ============================================= */
 .vision-statement-section {
   background: #fff;
   min-height: 100vh;
@@ -1291,7 +1294,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
+  background:
     linear-gradient(90deg, transparent 0%, rgba(212, 175, 55, 0.03) 50%, transparent 100%),
     radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
     radial-gradient(circle at 20% 80%, rgba(240, 193, 75, 0.05) 0%, transparent 50%);
@@ -1300,12 +1303,8 @@ body {
 }
 
 @keyframes shimmerBackground {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
 }
 
 .vision-split-container {
@@ -1361,99 +1360,31 @@ body {
 
 .vision-form-wrapper {
   width: 100%;
-  background: #fafafa;
-  padding: 50px;
-  border: 1px solid #e0e0e0;
+  background: transparent;
+  padding: 0;
+  border: none;
   animation: fadeInRight 1.2s ease-out 0.3s backwards;
   max-height: 90vh;
   overflow-y: auto;
 }
 
-.vision-form-wrapper .contact-form-wrapper {
-  background: transparent;
-  padding: 0;
-  box-shadow: none;
-  margin: 0;
-}
-
-.vision-form-wrapper .contact-form-wrapper h2 {
-  display: none;
-}
-
-.vision-form-wrapper .contact-form {
-  background: transparent;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.vision-form-wrapper .form-row {
-  display: flex;
-  gap: 15px;
-  width: 100%;
-}
-
-.vision-form-wrapper .form-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.vision-form-wrapper .form-group label {
-  color: #666;
-  font-size: 0.9rem;
-  margin-bottom: 8px;
-  font-weight: 600;
-}
-
+.vision-form-wrapper .contact-form-wrapper { background: transparent; padding: 0; box-shadow: none; margin: 0; }
+.vision-form-wrapper .contact-form-wrapper h2 { display: none; }
+.vision-form-wrapper .contact-form { background: transparent; display: flex; flex-direction: column; gap: 20px; }
+.vision-form-wrapper .form-row { display: flex; gap: 15px; width: 100%; }
+.vision-form-wrapper .form-group { flex: 1; display: flex; flex-direction: column; }
+.vision-form-wrapper .form-group label { color: #666; font-size: 0.9rem; margin-bottom: 8px; font-weight: 600; }
 .vision-form-wrapper .form-group input,
-.vision-form-wrapper .form-group textarea {
-  background: #fff;
-  color: #000;
-  border: 1px solid #ddd;
-  padding: 12px;
-  font-size: 1rem;
-  width: 100%;
-}
-
-.vision-form-wrapper .form-group textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
+.vision-form-wrapper .form-group textarea { background: #fff; color: #000; border: 1px solid #ddd; padding: 12px; font-size: 1rem; width: 100%; }
+.vision-form-wrapper .form-group textarea { min-height: 120px; resize: vertical; }
 .vision-form-wrapper .form-group input:focus,
-.vision-form-wrapper .form-group textarea:focus {
-  border-color: #d4af37;
-  outline: none;
-}
-
-.vision-form-wrapper .submit-btn {
-  background: #000;
-  color: #fff;
-  padding: 15px 40px;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-}
-
-.vision-form-wrapper .submit-btn:hover {
-  background: #d4af37;
-  color: #000;
-}
+.vision-form-wrapper .form-group textarea:focus { border-color: #d4af37; outline: none; }
+.vision-form-wrapper .submit-btn { background: #000; color: #fff; padding: 15px 40px; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; }
+.vision-form-wrapper .submit-btn:hover { background: #d4af37; color: #000; }
 
 @keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity: 0; transform: translateX(50px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 .vision-form-title {
@@ -1464,6 +1395,305 @@ body {
   text-transform: uppercase;
   margin-bottom: 30px;
   text-align: center;
+}
+
+.dramatic-form-wrapper {
+  width: 100%;
+  background: #0a0a0a;
+  padding: 50px 44px;
+  position: relative;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.form-corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: #d4af37;
+  border-style: solid;
+}
+.form-corner-tl { top: 16px; left: 16px; border-width: 1px 0 0 1px; }
+.form-corner-tr { top: 16px; right: 16px; border-width: 1px 1px 0 0; }
+.form-corner-bl { bottom: 16px; left: 16px; border-width: 0 0 1px 1px; }
+.form-corner-br { bottom: 16px; right: 16px; border-width: 0 1px 1px 0; }
+
+.dramatic-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.df-row {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.df-row-split {
+  flex-direction: row;
+  gap: 32px;
+}
+
+.df-row-split .df-field {
+  flex: 1;
+}
+
+/* Individual field */
+.df-field {
+  position: relative;
+  padding-top: 22px;
+}
+
+.df-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #555;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.df-optional {
+  font-weight: 400;
+  color: #444;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.df-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #2a2a2a;
+  color: #fff;
+  font-size: 1.05rem;
+  font-family: inherit;
+  padding: 10px 0 10px 0;
+  outline: none;
+  transition: border-color 0.3s ease;
+  resize: none;
+  caret-color: #d4af37;
+}
+
+.df-input::placeholder { color: transparent; }
+
+.df-textarea {
+  min-height: 90px;
+  line-height: 1.7;
+}
+
+/* Animated golden underline */
+.df-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 1px;
+  background: linear-gradient(90deg, #d4af37, #f0c14b);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+/* Active state */
+.df-field.df-active .df-label { color: #d4af37; }
+.df-field.df-active .df-underline { width: 100%; }
+.df-field.df-active .df-input { border-bottom-color: transparent; }
+
+/* Filled state */
+.df-field.df-filled .df-label { color: #666; }
+.df-field.df-filled .df-underline { width: 100%; background: #333; }
+
+/* Error state */
+.df-field.df-error .df-label { color: #e05555; }
+.df-field.df-error .df-underline { width: 100%; background: #e05555; }
+.df-field.df-error .df-input { border-bottom-color: transparent; }
+
+.df-err-msg {
+  font-size: 0.7rem;
+  color: #e05555;
+  letter-spacing: 1px;
+  margin-top: 6px;
+  display: block;
+}
+
+/* Submit button */
+.df-submit {
+  position: relative;
+  background: transparent;
+  border: 1px solid #d4af37;
+  color: #d4af37;
+  padding: 18px 40px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  transition: color 0.4s ease;
+  align-self: flex-start;
+  min-width: 220px;
+  margin-top: 8px;
+}
+
+.df-submit-fill {
+  position: absolute;
+  inset: 0;
+  background: #d4af37;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
+
+.df-submit-text,
+.df-submit-arrow {
+  position: relative;
+  z-index: 1;
+  transition: color 0.4s ease;
+}
+
+.df-submit-arrow {
+  font-size: 1.1rem;
+  transition: transform 0.4s ease, color 0.4s ease;
+}
+
+.df-submit:hover .df-submit-fill { transform: scaleX(1); }
+.df-submit:hover .df-submit-text,
+.df-submit:hover .df-submit-arrow { color: #000; }
+.df-submit:hover .df-submit-arrow { transform: translateX(6px); }
+
+/* Success state */
+.form-success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  gap: 16px;
+}
+
+.success-checkmark {
+  font-size: 3rem;
+  color: #d4af37;
+  animation: spinIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes spinIn {
+  from { transform: scale(0) rotate(-180deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg);   opacity: 1; }
+}
+
+.form-success-state h3 {
+  font-size: 1.4rem;
+  font-weight: 300;
+  letter-spacing: 4px;
+  color: #fff;
+  margin: 0;
+}
+
+.form-success-state p {
+  font-size: 0.9rem;
+  color: #888;
+  margin: 0;
+}
+
+/* =============================================
+   SOCIAL HANDLES IN CARD 2
+   ============================================= */
+.social-handles {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.social-handle-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  padding: 10px 14px;
+  border: 1px solid #f0f0f0;
+  transition: border-color 0.3s ease,
+              background 0.3s ease,
+              transform 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.social-handle-row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(212,175,55,0.06), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.social-handle-row:hover {
+  border-color: #d4af37;
+  transform: translateX(6px);
+  background: #fffdf7;
+}
+
+.social-handle-row:hover::before { opacity: 1; }
+
+.social-handle-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.social-handle-icon svg {
+  width: 16px;
+  height: 16px;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.social-handle-row:hover .social-handle-icon {
+  background: #d4af37;
+}
+
+.social-handle-row:hover .social-handle-icon svg {
+  color: #fff;
+}
+
+.social-handle-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #000;
+  letter-spacing: 0.5px;
+  flex: 1;
+}
+
+.social-handle-at {
+  font-size: 0.78rem;
+  color: #999;
+  letter-spacing: 0.3px;
+  transition: color 0.3s ease;
+}
+
+.social-handle-row:hover .social-handle-at {
+  color: #d4af37;
 }
 
 @keyframes expandWidth {
@@ -2612,6 +2842,11 @@ body {
     padding: 60px 30px;
   }
   
+  .vision-split-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
   .vision-form-wrapper {
     padding: 30px;
   }
