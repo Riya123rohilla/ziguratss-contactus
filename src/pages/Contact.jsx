@@ -38,7 +38,6 @@ const Contact = () => {
       }
     });
 
-    // Contact Form section animation
     if (reachUsRef.current) {
       gsap.fromTo(
         reachUsRef.current,
@@ -98,7 +97,6 @@ const Contact = () => {
       );
     });
 
-    // Blur effect on scroll
     const sections = document.querySelectorAll('.contact-page section');
     
     const observerOptions = {
@@ -110,7 +108,6 @@ const Contact = () => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          // Section is in view - clear
           entry.target.style.filter = 'blur(0px)';
           entry.target.style.opacity = '1';
           entry.target.style.transform = 'scale(1) translateZ(0)';
@@ -127,7 +124,6 @@ const Contact = () => {
       observer.observe(section);
     });
 
-    // Parallax effect on scroll
     let lastScrollTop = 0;
     const handleScroll = () => {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
