@@ -1363,7 +1363,6 @@ body {
   background: transparent;
   padding: 0;
   border: none;
-  animation: fadeInRight 1.2s ease-out 0.3s backwards;
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -1381,11 +1380,6 @@ body {
 .vision-form-wrapper .form-group textarea:focus { border-color: #d4af37; outline: none; }
 .vision-form-wrapper .submit-btn { background: #000; color: #fff; padding: 15px 40px; border: none; cursor: pointer; font-size: 1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease; }
 .vision-form-wrapper .submit-btn:hover { background: #d4af37; color: #000; }
-
-@keyframes fadeInRight {
-  from { opacity: 0; transform: translateX(50px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
 
 .vision-form-title {
   font-size: 1.5rem;
