@@ -1,439 +1,437 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import ContactInfo from '../components/ContactInfo';
 import ContactForm from '../components/ContactForm';
 import Navbar from '../components/Navbar';
+import '../styles/contact-scroll.css';
 
-gsap.registerPlugin(ScrollTrigger);
+const ARTWORKS = [
+  { src: 'https://zigguratss.com/public/images/artworks/1482/propose_1482_01.jpg',        title: 'Propose',        artist: 'Uttam Manna'       },
+  { src: 'https://zigguratss.com/public/images/artworks/1481/eternal_melody_1481_01.jpg', title: 'Eternal Melody', artist: 'Zigguratss Artist' },
+  { src: 'https://zigguratss.com/public/images/artworks/1480/artwork_1480_01.jpg',        title: 'Abstract Vision',artist: 'Zigguratss Artist' },
+  { src: 'https://zigguratss.com/public/images/artworks/1479/artwork_1479_01.jpg',        title: 'Silent Story',   artist: 'Zigguratss Artist' },
+];
+
+const FALLBACK = [
+  'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&q=80',
+  'https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=800&q=80',
+  'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=800&q=80',
+  'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
+];
+
+const TOTAL_PANELS = 5;
 
 const Contact = () => {
-  const featureBoxesRef = useRef([]);
-  const reachUsRef = useRef(null);
+  const imgRefs        = useRef([]);
+  const panelRefs      = useRef([]);
+  const progressRef    = useRef(null);
+  const blurOverlayRef = useRef(null);
+  const currentRef     = useRef(0);
+  const animatingRef   = useRef(false);
+  const goToRef        = useRef(null);
+  const tlRef          = useRef(null);
 
-  useEffect(() => {
-    featureBoxesRef.current.forEach((box, index) => {
-      if (box) {
-        gsap.fromTo(
-          box,
-          { 
-            opacity: 0, 
-            y: 50,
-            scale: 0.9
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            duration: 0.8,
-            delay: index * 0.2,
-            ease: 'back.out(1.5)',
-            scrollTrigger: {
-              trigger: box,
-              start: 'top 85%',
-              toggleActions: 'play none none none'
-            }
-          }
-        );
-      }
+  const [current, setCurrent] = useState(0);
+
+  /* ── swap artwork + caption ── */
+  const swapImage = useCallback((i) => {
+    const idx = Math.min(i, ARTWORKS.length - 1);
+    imgRefs.current.forEach((img, j) => {
+      if (!img) return;
+      gsap.to(img, { opacity: j === idx ? 1 : 0, scale: j === idx ? 1 : 1.06, duration: 1.1, ease: 'power2.inOut' });
     });
+    const captionTitle = document.querySelector('.artwork-caption-title');
+    const captionSub   = document.querySelector('.artwork-caption-sub');
+    if (captionTitle) {
+      gsap.to(captionTitle, { opacity: 0, duration: 0.25, onComplete: () => {
+        captionTitle.textContent = ARTWORKS[idx].title;
+        gsap.to(captionTitle, { opacity: 1, duration: 0.45, ease: 'power2.out' });
+      }});
+    }
+    if (captionSub) {
+      gsap.to(captionSub, { opacity: 0, duration: 0.25, onComplete: () => {
+        captionSub.textContent = ARTWORKS[idx].artist;
+        gsap.to(captionSub, { opacity: 1, duration: 0.45, delay: 0.08, ease: 'power2.out' });
+      }});
+    }
+  }, []);
 
-    if (reachUsRef.current) {
-      gsap.fromTo(
-        reachUsRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: reachUsRef.current,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
+  /* ── MAIN navigate — smooth fade/blur only, no slide ── */
+  const goTo = useCallback((next) => {
+    const prev = currentRef.current;
+    if (next === prev || next < 0 || next >= TOTAL_PANELS) return;
+    if (animatingRef.current) return;
+    animatingRef.current = true;
+
+    const prevPanel = panelRefs.current[prev];
+    const nextPanel = panelRefs.current[next];
+    if (!prevPanel || !nextPanel) { animatingRef.current = false; return; }
+
+    if (tlRef.current) tlRef.current.kill();
+    swapImage(next);
+
+    // Prep next panel — no y offset, pure fade+blur
+    gsap.set(nextPanel, { autoAlpha: 0, filter: 'blur(10px)', scale: 0.98, zIndex: 2 });
+    gsap.set(prevPanel, { zIndex: 1 });
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        gsap.set(prevPanel, { zIndex: 0, autoAlpha: 0, filter: 'blur(0px)', scale: 1 });
+        currentRef.current = next;
+        setCurrent(next);
+        if (progressRef.current) {
+          gsap.to(progressRef.current, { scaleX: (next + 1) / TOTAL_PANELS, duration: 0.6, ease: 'power2.out' });
         }
-      );
+        setTimeout(() => { animatingRef.current = false; }, 200);
+      },
+    });
+    tlRef.current = tl;
+
+    // Subtle blur flash overlay
+    if (blurOverlayRef.current) {
+      tl.fromTo(blurOverlayRef.current, { opacity: 0 }, { opacity: 0.3, duration: 0.15, ease: 'power1.in' }, 0)
+        .to(blurOverlayRef.current, { opacity: 0, duration: 0.5, ease: 'power2.out' }, 0.15);
     }
 
-    
-    const galleryItems = document.querySelectorAll('.gallery-item');
-    galleryItems.forEach((item, index) => {
-      gsap.fromTo(
-        item,
-        { opacity: 0, scale: 0.8 },
-        {
-          opacity: 1,
-          scale: 1,
-          duration: 0.6,
-          delay: index * 0.1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: item,
-            start: 'top 90%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
-    });
+    // Fade OUT prev — no y
+    tl.to(prevPanel, { autoAlpha: 0, filter: 'blur(8px)', scale: 0.985, duration: 0.5, ease: 'power2.inOut' }, 0);
 
-    const featureBoxes = document.querySelectorAll('.feature-box');
-    featureBoxes.forEach((box, index) => {
-      gsap.fromTo(
-        box,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          delay: index * 0.15,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: box,
-            start: 'top 85%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
-    });
+    // Fade IN next — overlapping, starts 0.18s in, no y
+    tl.to(nextPanel, { autoAlpha: 1, filter: 'blur(0px)', scale: 1, duration: 0.7, ease: 'power3.out' }, 0.18);
 
-    const sections = document.querySelectorAll('.contact-page section');
-    
-    const observerOptions = {
-      root: null,
-      threshold: 0.5,
-      rootMargin: '0px'
+    // Stagger inner content
+    const inner = nextPanel.querySelector('.rp-inner');
+    const cards = nextPanel.querySelectorAll('.info-card, .contact-block');
+    const rows  = nextPanel.querySelectorAll('.service-row, .footer-col');
+
+    if (inner) {
+      gsap.set(inner, { opacity: 0 });
+      tl.to(inner, { opacity: 1, duration: 0.55, ease: 'power3.out' }, 0.38);
+    }
+    if (cards.length) {
+      gsap.set(cards, { opacity: 0 });
+      tl.to(cards, { opacity: 1, duration: 0.45, stagger: 0.08, ease: 'power3.out' }, 0.46);
+    }
+    if (rows.length) {
+      gsap.set(rows, { opacity: 0 });
+      tl.to(rows, { opacity: 1, duration: 0.4, stagger: 0.06, ease: 'power3.out' }, 0.44);
+    }
+  }, [swapImage]);
+
+  useEffect(() => { goToRef.current = goTo; }, [goTo]);
+
+  useEffect(() => {
+    const panels = panelRefs.current.filter(Boolean);
+    gsap.set(panels, { autoAlpha: 0, filter: 'blur(0px)', scale: 1, zIndex: 0 });
+    gsap.set(panels[0], { autoAlpha: 1, zIndex: 1 });
+
+    const inner0 = panels[0].querySelector('.rp-inner');
+    if (inner0) gsap.fromTo(inner0, { opacity: 0 }, { opacity: 1, duration: 0.9, delay: 0.2, ease: 'power3.out' });
+
+    if (progressRef.current) gsap.set(progressRef.current, { scaleX: 1 / TOTAL_PANELS });
+
+    const onWheel = (e) => {
+      const panel = panelRefs.current[currentRef.current];
+      if (panel && panel.scrollHeight > panel.clientHeight) {
+        const atBottom = panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 2;
+        const atTop = panel.scrollTop <= 0;
+        if ((e.deltaY > 0 && !atBottom) || (e.deltaY < 0 && !atTop)) return;
+      }
+      e.preventDefault();
+      if (e.deltaY > 30) goToRef.current(currentRef.current + 1);
+      else if (e.deltaY < -30) goToRef.current(currentRef.current - 1);
     };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.style.filter = 'blur(0px)';
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'scale(1) translateZ(0)';
-        } else {
-          // Section is out of view - blur
-          entry.target.style.filter = 'blur(3px)';
-          entry.target.style.opacity = '0.7';
-          entry.target.style.transform = 'scale(0.98) translateZ(-50px)';
-        }
-      });
-    }, observerOptions);
-
-    sections.forEach((section) => {
-      observer.observe(section);
-    });
-
-    let lastScrollTop = 0;
-    const handleScroll = () => {
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const scrollDirection = scrollTop > lastScrollTop ? 'down' : 'up';
-      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-
-      sections.forEach((section, index) => {
-        const rect = section.getBoundingClientRect();
-        const scrollPercent = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
-        
-        // Parallax movement
-        const parallaxSpeed = 50;
-        const yOffset = (scrollPercent - 0.5) * parallaxSpeed;
-        
-        // 3D rotation based on scroll
-        const rotateX = Math.max(-5, Math.min(5, (scrollPercent - 0.5) * 10));
-        
-        // Add parallax and rotation effects
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          const elements = section.querySelectorAll('.cta-content, .vision-split-container, .services-container, .contact-info-container, .footer-modern-content');
-          elements.forEach(el => {
-            if (el) {
-              gsap.to(el, {
-                y: yOffset * -1,
-                rotateX: rotateX,
-                duration: 0.3,
-                ease: 'power1.out'
-              });
-            }
-          });
-        }
-      });
+    const onKey = (e) => {
+      if (['ArrowDown', 'PageDown'].includes(e.key)) { e.preventDefault(); goToRef.current(currentRef.current + 1); }
+      if (['ArrowUp',   'PageUp'  ].includes(e.key)) { e.preventDefault(); goToRef.current(currentRef.current - 1); }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Mouse move parallax effect
-    const handleMouseMove = (e) => {
-      const mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-      const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-
-      sections.forEach((section) => {
-        const rect = section.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-          const shapes = section.querySelectorAll('.shape, .floating-shapes');
-          shapes.forEach((shape) => {
-            if (shape) {
-              gsap.to(shape, {
-                x: mouseX * 30,
-                y: mouseY * 30,
-                duration: 1,
-                ease: 'power2.out'
-              });
-            }
-          });
-        }
-      });
+    let touchStartY = 0;
+    const onTouchStart = (e) => { touchStartY = e.touches[0].clientY; };
+    const onTouchEnd   = (e) => {
+      const diff = touchStartY - e.changedTouches[0].clientY;
+      if (Math.abs(diff) > 48) goToRef.current(currentRef.current + (diff > 0 ? 1 : -1));
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-
-    // Contact info cards animation using IntersectionObserver
-    const contactCards = document.querySelectorAll('.contact-info-card');
-    const cardObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const card = entry.target;
-          const index = Array.from(contactCards).indexOf(card);
-          gsap.fromTo(
-            card,
-            { opacity: 0, y: 60, scale: 0.92 },
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.8,
-              delay: index * 0.15,
-              ease: 'power3.out',
-            }
-          );
-          cardObserver.unobserve(card);
-        }
-      });
-    }, { threshold: 0.2 });
-
-    contactCards.forEach((card) => cardObserver.observe(card));
+    window.addEventListener('wheel',      onWheel,      { passive: false });
+    window.addEventListener('keydown',    onKey);
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchend',   onTouchEnd,   { passive: true });
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      observer.disconnect();
-      cardObserver.disconnect();
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('wheel',      onWheel);
+      window.removeEventListener('keydown',    onKey);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchend',   onTouchEnd);
+      if (tlRef.current) tlRef.current.kill();
     };
   }, []);
 
   return (
-    <div className="contact-page">
+    <>
       <Navbar />
-      
-      {/* Animated Background Section - First */}
-      <section className="animated-cta-section">
-        <div className="floating-shapes">
-          <div className="shape shape-1"></div>
-          <div className="shape shape-2"></div>
-          <div className="shape shape-3"></div>
-          <div className="shape shape-4"></div>
-          <div className="shape shape-5"></div>
-        </div>
-        <div className="cta-content">
-          <h2 className="cta-heading">
-            <span className="cta-line">CREATE</span>
-            <span className="cta-line cta-gold">SOMETHING</span>
-            <span className="cta-line">EXTRAORDINARY</span>
-          </h2>
-          <p className="cta-subtitle">Let's bring your artistic vision to life</p>
-          <a href="#contact-form" className="cta-btn-modern">
-            <span>Contact Us</span>
-            <div className="cta-btn-shine"></div>
-          </a>
-        </div>
-        <div className="scroll-indicator"></div>
-      </section>
 
-      {/* Vision Statement Section - Page 2 */}
-      <section className="vision-statement-section">
-        <div className="vision-split-container">
-          <div className="vision-left">
-            <h2 className="vision-title">
-              EVERY ARTWORK STARTS <span className="with-text-vision">with a</span> VISION.<br/>
-              LET'S START YOURS
-            </h2>
-            <div className="vision-underline"></div>
+      <div className="scroll-progress-bar">
+        <div className="scroll-progress-fill" ref={progressRef}></div>
+      </div>
+
+      <div className="csp-blur-overlay" ref={blurOverlayRef}></div>
+
+      <nav className="csp-dot-nav">
+        {Array.from({ length: TOTAL_PANELS }).map((_, i) => (
+          <button key={i} className={`csp-dot${current === i ? ' active' : ''}`} onClick={() => goTo(i)} aria-label={`Panel ${i + 1}`} />
+        ))}
+      </nav>
+
+      <div className="csp-wrapper">
+
+        {/* ── LEFT sticky artwork ── */}
+        <div className="csp-left">
+          <div className="artwork-stack">
+            {ARTWORKS.map((art, i) => (
+              <img key={i} ref={el => (imgRefs.current[i] = el)} src={art.src} alt={art.title}
+                className="artwork-img" style={{ opacity: i === 0 ? 1 : 0 }}
+                onError={e => { e.target.src = FALLBACK[i % FALLBACK.length]; }} />
+            ))}
+            <div className="artwork-overlay"></div>
+          </div>
+          <div className="artwork-caption">
+            <span className="artwork-caption-eyebrow">— ZIGGURATSS COLLECTION</span>
+            <p className="artwork-caption-title">{ARTWORKS[0].title}</p>
+            <p className="artwork-caption-sub">{ARTWORKS[0].artist}</p>
+          </div>
+          <div className="artwork-sidetag">CONTACT US</div>
+        </div>
+
+        {/* ── RIGHT stacked panels ── */}
+        <div className="csp-right">
+
+          {/* Panel 0 — Hero */}
+          <div className="right-panel rp-hero" ref={el => (panelRefs.current[0] = el)}>
+            <div className="hero-shapes">
+              <div className="hs-1"></div><div className="hs-2"></div><div className="hs-3"></div>
+            </div>
+            <div className="rp-inner">
+              <span className="rp-eyebrow">ZIGGURATSS ARTWORK</span>
+              <h1 className="rp-headline">CREATE<br /><span className="rp-gold">SOMETHING</span><br />EXTRAORDINARY</h1>
+              <p className="rp-body">Every masterpiece begins with a conversation.<br />Let's start yours.</p>
+              <button className="rp-cta" onClick={() => goTo(1)}>
+                <span>Get in Touch</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </button>
+              <div className="rp-scroll-hint"><span></span>Scroll to explore</div>
+            </div>
           </div>
 
-          <div className="vision-right">
-            <div className="vision-form-wrapper">
-              <h3 className="vision-form-title">Get in Touch</h3>
+          {/* Panel 1 — Form */}
+          <div className="right-panel rp-form" ref={el => (panelRefs.current[1] = el)}>
+            <div className="rp-inner">
+              <span className="rp-eyebrow">WRITE TO US</span>
+              <h2 className="rp-section-title">EVERY ARTWORK STARTS <em>with a</em> VISION.<br />LET'S START YOURS</h2>
+              <div className="rp-gold-line"></div>
               <ContactForm />
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Services Showcase Section */}
-      <section className="services-showcase-section">
-        <div className="services-container">
-          <h2 className="services-title">OUR <span className="gold-text">SERVICES</span></h2>
-          
-          <div className="services-grid">
-            <div className="service-card">
-              <div className="service-icon">🎨</div>
-              <h3>Custom Artwork</h3>
-              <p>Original pieces tailored to your specifications</p>
-              <ul className="service-list">
-                <li>Oil & Acrylic Paintings</li>
-                <li>Watercolor & Mixed Media</li>
-                <li>Digital Art</li>
-                <li>Sculptures</li>
-              </ul>
-            </div>
-            
-            <div className="service-card">
-              <div className="service-icon">🖼️</div>
-              <h3>Art Restoration</h3>
-              <p>Breathe new life into cherished pieces</p>
-              <ul className="service-list">
-                <li>Damage Assessment</li>
-                <li>Color Restoration</li>
-                <li>Frame Repair</li>
-                <li>Preservation</li>
-              </ul>
-            </div>
-            
-            <div className="service-card">
-              <div className="service-icon">💼</div>
-              <h3>Corporate Art</h3>
-              <p>Elevate your business environment</p>
-              <ul className="service-list">
-                <li>Office Installations</li>
-                <li>Brand Artwork</li>
-                <li>Wall Murals</li>
-                <li>Art Consultation</li>
-              </ul>
-            </div>
-            
-            <div className="service-card">
-              <div className="service-icon">🏛️</div>
-              <h3>Gallery Services</h3>
-              <p>Professional curation and display</p>
-              <ul className="service-list">
-                <li>Exhibition Design</li>
-                <li>Lighting Setup</li>
-                <li>Collection Management</li>
-                <li>Art Advisory</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
+          {/* Panel 2 — Contact Info (redesigned) */}
+          <div className="right-panel rp-info" ref={el => (panelRefs.current[2] = el)}>
+            <div className="rp-inner rp-inner--wide">
+              <span className="rp-eyebrow">REACH US</span>
+              <h2 className="rp-section-title">LET'S <span className="rp-gold-text">CONNECT</span></h2>
+              <div className="rp-gold-line"></div>
 
-      {/* Contact Information Grid */}
-      <section className="contact-info-grid-section">
-        <div className="contact-info-container">
+              <div className="contact-blocks">
 
-          {/* Card 1 - General Enquiries */}
-          <div className="contact-info-card" data-delay="0">
-            <div className="contact-card-icon">✉️</div>
-            <h3 className="contact-card-title">GENERAL<br/>ENQUIRIES</h3>
-            <div className="contact-card-divider"></div>
-            <div className="contact-card-body">
-              <span className="contact-card-label">STUDIO</span>
-              <a href="mailto:contact@zigguratss.com" className="contact-card-link">contact@zigguratss.com</a>
-              <a href="tel:+917838535496" className="contact-card-link">+91 7838535496</a>
-            </div>
-          </div>
+                {/* Block 01 — Enquiries */}
+                <div className="contact-block">
+                  <div className="cb-header">
+                    <span className="cb-num">01</span>
+                    <div className="cb-gold-bar"></div>
+                  </div>
+                  <h3 className="cb-title">GENERAL<br />ENQUIRIES</h3>
+                  <div className="cb-divider"></div>
+                  <p className="cb-label">STUDIO</p>
+                  <div className="cb-links">
+                    <a href="mailto:contact@zigguratss.com" className="cb-link">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+                      contact@zigguratss.com
+                    </a>
+                    <a href="tel:+917838535496" className="cb-link">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.79a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                      +91 7838535496
+                    </a>
+                  </div>
+                </div>
 
-          {/* Card 2 - Connect With Us */}
-          <div className="contact-info-card" data-delay="1">
-            <div className="contact-card-icon">🌐</div>
-            <h3 className="contact-card-title">CONNECT<br/>WITH US</h3>
-            <div className="contact-card-divider"></div>
-            <div className="contact-card-body">
-              <span className="contact-card-label">FOLLOW US</span>
-              <div className="social-handles">
-                <a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="social-handle-row">
-                  <span className="social-handle-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                  </span>
-                  <span className="social-handle-name">Instagram</span>
-                  <span className="social-handle-at">@zigguratss</span>
-                </a>
-                <a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer" className="social-handle-row">
-                  <span className="social-handle-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                  </span>
-                  <span className="social-handle-name">Facebook</span>
-                  <span className="social-handle-at">Zigguratss Artwork</span>
-                </a>
-                <a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer" className="social-handle-row">
-                  <span className="social-handle-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                  </span>
-                  <span className="social-handle-name">LinkedIn</span>
-                  <span className="social-handle-at">zigguratssartwork</span>
-                </a>
-                <a href="https://in.pinterest.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="social-handle-row">
-                  <span className="social-handle-icon">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
-                  </span>
-                  <span className="social-handle-name">Pinterest</span>
-                  <span className="social-handle-at">@zigguratss</span>
-                </a>
+                {/* Block 02 — Social */}
+                <div className="contact-block">
+                  <div className="cb-header">
+                    <span className="cb-num">02</span>
+                    <div className="cb-gold-bar"></div>
+                  </div>
+                  <h3 className="cb-title">CONNECT<br />WITH US</h3>
+                  <div className="cb-divider"></div>
+                  <p className="cb-label">FOLLOW</p>
+                  <div className="cb-social">
+                    <a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="cb-social-item">
+                      <span className="cb-social-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                      </span>
+                      <div className="cb-social-text">
+                        <span className="cb-social-name">Instagram</span>
+                        <span className="cb-social-handle">@zigguratss</span>
+                      </div>
+                      <span className="cb-social-arrow">→</span>
+                    </a>
+                    <a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer" className="cb-social-item">
+                      <span className="cb-social-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                      </span>
+                      <div className="cb-social-text">
+                        <span className="cb-social-name">Facebook</span>
+                        <span className="cb-social-handle">Zigguratss Artwork</span>
+                      </div>
+                      <span className="cb-social-arrow">→</span>
+                    </a>
+                    <a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer" className="cb-social-item">
+                      <span className="cb-social-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                      </span>
+                      <div className="cb-social-text">
+                        <span className="cb-social-name">LinkedIn</span>
+                        <span className="cb-social-handle">zigguratssartwork</span>
+                      </div>
+                      <span className="cb-social-arrow">→</span>
+                    </a>
+                    <a href="https://in.pinterest.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="cb-social-item">
+                      <span className="cb-social-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+                      </span>
+                      <div className="cb-social-text">
+                        <span className="cb-social-name">Pinterest</span>
+                        <span className="cb-social-handle">@zigguratss</span>
+                      </div>
+                      <span className="cb-social-arrow">→</span>
+                    </a>
+                  </div>
+                </div>
+
+                {/* Block 03 — Location */}
+                <div className="contact-block">
+                  <div className="cb-header">
+                    <span className="cb-num">03</span>
+                    <div className="cb-gold-bar"></div>
+                  </div>
+                  <h3 className="cb-title">OUR<br />LOCATION</h3>
+                  <div className="cb-divider"></div>
+                  <p className="cb-label">ADDRESS</p>
+                  <div className="cb-address">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    <div>
+                      <p className="cb-address-line">New Delhi</p>
+                      <p className="cb-address-line">India</p>
+                      <p className="cb-address-note">Visits by appointment only</p>
+                    </div>
+                  </div>
+                  <a href="https://maps.google.com/?q=New+Delhi,India" target="_blank" rel="noopener noreferrer" className="cb-map-link">
+                    View on Map <span>→</span>
+                  </a>
+                </div>
+
               </div>
             </div>
           </div>
 
-          {/* Card 3 - Location */}
-          <div className="contact-info-card" data-delay="2">
-            <div className="contact-card-icon">📍</div>
-            <h3 className="contact-card-title">OUR<br/>LOCATION</h3>
-            <div className="contact-card-divider"></div>
-            <div className="contact-card-body">
-              <span className="contact-card-label">ADDRESS</span>
-              <p className="contact-card-text">New Delhi<br/>India</p>
-              <p className="contact-card-note">Visits by appointment only</p>
+          {/* Panel 3 — Services */}
+          <div className="right-panel rp-services" ref={el => (panelRefs.current[3] = el)}>
+            <div className="rp-inner">
+              <span className="rp-eyebrow">WHAT WE DO</span>
+              <h2 className="rp-section-title">OUR <span className="rp-gold">SERVICES</span></h2>
+              <div className="rp-gold-line"></div>
+              <div className="services-list">
+                {[
+                  { num:'01', title:'Custom Artwork',   desc:'Oil, acrylic, watercolor, mixed media & digital art tailored to your vision.' },
+                  { num:'02', title:'Art Restoration',  desc:'Damage assessment, color restoration, frame repair and preservation.' },
+                  { num:'03', title:'Corporate Art',    desc:'Office installations, brand artwork, wall murals and art consultation.' },
+                  { num:'04', title:'Gallery Services', desc:'Exhibition design, lighting setup, collection management and art advisory.' },
+                ].map(s => (
+                  <div className="service-row" key={s.num}>
+                    <span className="service-num">{s.num}</span>
+                    <div className="service-content"><h3>{s.title}</h3><p>{s.desc}</p></div>
+                    <span className="service-arrow">→</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
-        </div>
-      </section>
+          {/* Panel 4 — Footer */}
+          <div className="right-panel rp-footer" ref={el => (panelRefs.current[4] = el)}>
+            <div className="rp-inner rp-inner--wide footer-inner">
 
-      {/* Minimalist Footer */}
-      <footer className="footer-modern">
-        <div className="footer-modern-content">
-          <div className="footer-brand">
-            <h3>ZIGGURATSS</h3>
-            <p>Artwork Excellence Since 2020</p>
+              {/* Top row */}
+              <div className="footer-top">
+                <div className="footer-brand">
+                  <p className="footer-logo">ZIGGURATSS</p>
+                  <p className="footer-tagline">Where Art Meets Vision</p>
+                  <div className="footer-gold-line"></div>
+                  <p className="footer-desc">Curating extraordinary artwork that transforms spaces and inspires minds. Every piece tells a story.</p>
+                </div>
+
+                <div className="footer-cols">
+                  <div className="footer-col">
+                    <p className="footer-col-heading">CONTACT</p>
+                    <a href="mailto:contact@zigguratss.com" className="footer-link">contact@zigguratss.com</a>
+                    <a href="tel:+917838535496" className="footer-link">+91 7838535496</a>
+                    <p className="footer-link-muted">New Delhi, India</p>
+                  </div>
+                  <div className="footer-col">
+                    <p className="footer-col-heading">FOLLOW</p>
+                    <a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="footer-link">Instagram</a>
+                    <a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer" className="footer-link">Facebook</a>
+                    <a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer" className="footer-link">LinkedIn</a>
+                    <a href="https://in.pinterest.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="footer-link">Pinterest</a>
+                  </div>
+                  <div className="footer-col">
+                    <p className="footer-col-heading">EXPLORE</p>
+                    <a href="/" className="footer-link">Home</a>
+                    <a href="/gallery" className="footer-link">Gallery</a>
+                    <a href="/about" className="footer-link">About Us</a>
+                    <a href="/contact" className="footer-link">Contact</a>
+                  </div>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="footer-divider"></div>
+
+              {/* Bottom row */}
+              <div className="footer-bottom">
+                <p className="footer-copy">© {new Date().getFullYear()} Zigguratss Artwork LLP. All rights reserved.</p>
+                <div className="footer-socials">
+                  <a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                  </a>
+                  <a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                  </a>
+                  <a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                  </a>
+                  <a href="https://in.pinterest.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Pinterest">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+                  </a>
+                </div>
+              </div>
+
+            </div>
           </div>
-          
-          <div className="footer-links-grid">
-            <div className="footer-col">
-              <h4>Explore</h4>
-              <a href="https://zigguratss.com/about/">About</a>
-              <a href="https://zigguratss.com/blog">Journal</a>
-              <a href="https://zigguratss.com/faq">FAQs</a>
-            </div>
-            
-            <div className="footer-col">
-              <h4>Resources</h4>
-              <a href="https://zigguratss.com/cms/customer-guide">Buyer's Guide</a>
-              <a href="https://zigguratss.com/cms/artist-guide">Artist's Guide</a>
-              <a href="https://zigguratss.com/cms/terms-and-conditions">Terms</a>
-            </div>
-            
-            <div className="footer-col">
-              <h4>Connect</h4>
-              <a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer">Facebook</a>
-              <a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-              <a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer">Instagram</a>
-              <a href="https://in.pinterest.com/zigguratss/" target="_blank" rel="noopener noreferrer">Pinterest</a>
-            </div>
-          </div>
-        </div>
-        
-        <div className="footer-bottom-modern">
-          <p>© 2026 Zigguratss Artwork LLP. All Rights Reserved.</p>
-        </div>
-      </footer>
-    </div>
+
+        </div>{/* /csp-right */}
+      </div>{/* /csp-wrapper */}
+    </>
   );
 };
 
