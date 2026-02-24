@@ -228,7 +228,7 @@ const Contact = () => {
           {/* Panel 1 — Form */}
           <div className="right-panel rp-form" ref={el => (panelRefs.current[1] = el)}>
             <div className="rp-inner">
-              <span className="rp-eyebrow">WRITE TO US</span>
+              <span className="rp-eyebrow">ZIGGURATSS ARTWORK</span>
               <h2 className="rp-section-title">EVERY ARTWORK STARTS <em>with a</em> VISION.<br />LET'S START YOURS</h2>
               <div className="rp-gold-line"></div>
               <ContactForm />

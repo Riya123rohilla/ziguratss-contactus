@@ -312,19 +312,26 @@ html, body {
 @keyframes scrollPulse { 0%, 100% { transform: scaleX(1); opacity: 0.3; } 50% { transform: scaleX(1.8); opacity: 0.8; } }
 
 /* ════════════════════════════════
-   PANEL 1 — FORM (white)
+   PANEL 1 — FORM (dark / gold theme)
 ════════════════════════════════ */
 .rp-form {
   background: #ffffff;
   align-items: flex-start;
   padding-top: 90px;
 }
+.rp-form .rp-inner {
+  max-width: 620px;
+  width: 100%;
+}
+
+/* Subtle radial glow top-right */
 .rp-form::before {
   content: '';
   position: absolute; inset: 0;
   background: repeating-linear-gradient(-45deg, rgba(212,175,55,0.03) 1px, transparent 1px, transparent 28px);
   pointer-events: none;
 }
+/* Bottom-left glow */
 .rp-form::after {
   content: '';
   position: absolute;
@@ -335,6 +342,7 @@ html, body {
   pointer-events: none;
 }
 
+/* ── Shared heading base ── */
 .rp-section-title {
   font-size: clamp(1.4rem, 2.6vw, 2.4rem);
   font-weight: 200;
@@ -344,15 +352,30 @@ html, body {
   text-transform: uppercase;
   margin-bottom: 0;
 }
-.rp-section-title em { font-style: italic; color: #d4af37; font-weight: 300; }
+.rp-section-title em {
+  font-style: italic;
+  color: #d4af37;
+  font-weight: 300;
+}
 
-/* Form field overrides for white bg */
+/* ── Heading on form panel only ── */
+.rp-form .rp-section-title {
+  color: #111;
+}
+
+/* ── Eyebrow on white bg ── */
+.rp-form .rp-eyebrow {
+  color: rgba(212,175,55,0.85);
+}
+
+/* ── Form field overrides for white bg ── */
 .rp-form .dramatic-form-wrapper { background: transparent; box-shadow: none; padding: 0; }
 .rp-form .df-input { color: #111; border-bottom-color: rgba(0,0,0,0.15); background: transparent; }
 .rp-form .df-label { color: #888; }
 .rp-form .df-field.df-active .df-label { color: #d4af37; }
 .rp-form .df-field.df-filled .df-label { color: #555; }
 .rp-form .df-field.df-filled .df-underline { background: #333; }
+
 /* ── SEND MESSAGE button — gold & black theme ── */
 .rp-form .df-submit {
   background: #0a0a0a;
@@ -368,22 +391,16 @@ html, body {
   transition: color 0.45s ease, border-color 0.45s ease;
   box-shadow: 0 4px 24px rgba(0,0,0,0.18);
 }
-
-/* Shimmering gold fill on hover */
 .rp-form .df-submit-fill {
   background: linear-gradient(90deg, #b8941e 0%, #d4af37 40%, #f0c14b 60%, #d4af37 100%);
   background-size: 200% 100%;
   animation: none;
 }
-
-/* Arrow icon */
 .rp-form .df-submit .df-submit-arrow {
   color: rgba(212,175,55,0.6);
   font-size: 1.2rem;
   transition: transform 0.4s ease, color 0.4s ease;
 }
-
-/* Hover state — gold fills, text turns black */
 .rp-form .df-submit:hover {
   color: #000;
   border-color: #d4af37;
@@ -397,10 +414,12 @@ html, body {
   color: #000;
   transform: translateX(8px);
 }
+.rp-form .df-submit:active { transform: scale(0.985); }
 
-/* Active / press */
-.rp-form .df-submit:active {
-  transform: scale(0.985);
+/* ── Divider line between title and form ── */
+.rp-form .rp-gold-line {
+  background: linear-gradient(90deg, #d4af37, rgba(212,175,55,0.1));
+  margin: 24px 0 40px;
 }
 
 @keyframes shimmer {
@@ -516,11 +535,11 @@ html, body {
   pointer-events: none;
 }
 
-.services-list { width: 100%; display: flex; flex-direction: column; }
+.services-list { width: 100%; display: flex; flex-direction: column; gap: 12px; }
 .service-row {
   display: flex; align-items: center; gap: 28px;
-  padding: 26px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.07);
+  padding: 26px 20px;
+  border: 1px solid rgba(0,0,0,0.07);
   position: relative;
   transition: background 0.25s;
 }
@@ -593,20 +612,20 @@ html, body {
 .contact-blocks {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0;
+  gap: 20px;
   width: 100%;
-  border: 1px solid rgba(0,0,0,0.08);
+  border: none;
 }
 
 /* Each block */
 .contact-block {
   padding: 36px 32px 40px;
-  border-right: 1px solid rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.08);
   position: relative;
   background: #fff;
   transition: background 0.3s;
 }
-.contact-block:last-child { border-right: none; }
+.contact-block:last-child { border-right: 1px solid rgba(0,0,0,0.08); }
 .contact-block:hover { background: #fafaf8; }
 
 .cb-header {
@@ -910,16 +929,13 @@ html, body {
 ════════════════════════════════════════════════ */
 @media (max-width: 1100px) {
   .contact-blocks { grid-template-columns: 1fr 1fr; }
-  .contact-block:nth-child(2) { border-right: none; }
-  .contact-block:nth-child(3) { border-top: 1px solid rgba(0,0,0,0.08); border-right: none; grid-column: span 2; }
+  .contact-block:nth-child(3) { grid-column: span 2; }
   .footer-top { flex-direction: column; gap: 36px; }
   .footer-brand { flex: none; }
 }
 
 @media (max-width: 768px) {
   .contact-blocks { grid-template-columns: 1fr; }
-  .contact-block { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.07); }
-  .contact-block:last-child { border-bottom: none; }
   .contact-block:nth-child(3) { grid-column: span 1; }
   .footer-cols { grid-template-columns: 1fr 1fr; }
   .rp-footer { padding: 70px 24px 60px; }
