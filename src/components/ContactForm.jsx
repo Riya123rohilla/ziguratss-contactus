@@ -103,8 +103,8 @@ const ContactForm = () => {
       ) : (
         <form onSubmit={handleSubmit} className="dramatic-form" noValidate>
 
-          {/* Row 1 — Name + Email side by side */}
-          <div className="df-row df-row-split df-row-name-email">
+          {/* Row 1 — Name + Email */}
+          <div className="df-row df-row-split">
             <div className={`df-field-card ${errors.name ? 'df-card-error' : ''}`}>
               <label className="df-card-label">YOUR NAME</label>
               <input
@@ -138,8 +138,9 @@ const ContactForm = () => {
             </div>
           </div>
 
-          {/* Row 2 — Phone + Country Name side by side */}
+          {/* Row 2 — Phone + Country */}
           <div className="df-row df-row-split">
+
             <div className="df-field-card">
               <label className="df-card-label">PHONE NUMBER <span className="df-card-optional">(optional)</span></label>
               <div className="df-phone-row">
@@ -184,6 +185,7 @@ const ContactForm = () => {
                 autoComplete="off"
               />
             </div>
+
           </div>
 
           {/* Row 3 — Message */}
