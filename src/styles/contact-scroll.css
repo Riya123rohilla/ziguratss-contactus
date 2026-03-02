@@ -1268,118 +1268,221 @@ html, body {
 }
 
 /* ════════════════════════════════════════════════
-   FULL RESPONSIVE — mobile & tablet
+   FULL RESPONSIVE — Tablet & Mobile
 ════════════════════════════════════════════════ */
 
 /* ── Tablet landscape (≤ 1024px) ── */
 @media (max-width: 1024px) {
-  .csp-left { width: 40%; }
-  .right-panel { padding: 70px 48px; }
-  .rp-form { padding-top: 70px; }
-  .rp-form .rp-inner { max-width: 100%; }
-  .rp-headline { font-size: clamp(2.2rem, 4.5vw, 3.8rem); }
+  .csp-left { width: 36%; }
+  .right-panel { padding: 44px 36px; }
+  .rp-form .rp-inner { padding: 48px 32px 16px; }
+  .rp-form .df-row-split { gap: 8px; }
+  .rp-headline { font-size: clamp(2rem, 4vw, 3.6rem); }
+  .df-card-input { font-size: 0.83rem; }
+  .df-captcha-box { max-width: 100%; }
+  .contact-blocks { gap: 16px; }
 }
 
-/* ── Tablet portrait (≤ 768px) — stack layout ── */
+/* ════════════════════════════════════════════
+   MOBILE / TABLET PORTRAIT  (≤ 768px)
+   — Disable GSAP panel system entirely.
+   — Full-page normal scroll, stacked layout.
+════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  /* Disable overflow:hidden on html/body to allow normal scroll fallback */
-  html, body { overflow: auto; }
 
-  /* Stack wrapper vertically */
-  .csp-wrapper {
-    flex-direction: column;
+  /* ── Base: allow scrolling ── */
+  html, body {
+    overflow-x: hidden;
+    overflow-y: auto;
     height: auto;
+    background: #0a0a0a;
+  }
+
+  /* ── Wrapper: vertical stack ── */
+  .csp-wrapper {
     position: relative;
+    top: 0;
+    left: 0;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
     overflow: visible;
   }
 
-  /* Left panel becomes a banner */
+  /* Mobile wrapper class applied via JS */
+  .csp-wrapper--mobile {
+    display: block;
+  }
+
+  /* ── Left artwork: horizontal banner ── */
   .csp-left {
+    position: relative;
     width: 100%;
-    height: 50vw;
-    min-height: 220px;
-    max-height: 360px;
+    height: 55vw;
+    min-height: 200px;
+    max-height: 320px;
     flex-shrink: 0;
   }
+
+  /* Show all artwork images stacked (first one visible) */
+  .artwork-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .artwork-sidetag { display: none; }
-  .artwork-caption { bottom: 24px; left: 24px; right: 24px; }
-  .artwork-caption-title { font-size: 1.2rem; }
+  .artwork-caption { bottom: 20px; left: 20px; right: 20px; }
+  .artwork-caption-eyebrow { font-size: 0.55rem; letter-spacing: 3px; }
+  .artwork-caption-title { font-size: 1.1rem; letter-spacing: 1.5px; }
+  .artwork-caption-sub { font-size: 0.7rem; margin-top: 4px; }
 
-  /* Right: auto height, no fixed stacking */
+  /* ── Right panel container: normal flow ── */
   .csp-right {
-    height: auto;
-    overflow: visible;
-    background: #fff;
-  }
-
-  /* Panels: static stacking instead of absolute */
-  .right-panel {
     position: relative;
-    inset: auto;
+    width: 100%;
     height: auto;
-    min-height: 100vh;
-    padding: 60px 28px 56px;
-    display: flex;
-    align-items: flex-start;
     overflow: visible;
+    background: #0a0a0a;
   }
 
-  /* Dot nav — hide on mobile (panels are stacked) */
-  .csp-dot-nav { display: none; }
+  /* ── Each panel: static block, full width ── */
+  .right-panel {
+    position: relative !important;
+    inset: auto !important;
+    width: 100%;
+    height: auto !important;
+    min-height: auto;
+    display: block;
+    padding: 52px 24px 56px;
+    overflow: visible !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    filter: none !important;
+    z-index: auto !important;
+  }
 
-  /* Progress bar stays */
-  .scroll-progress-bar { display: none; }
+  /* ── Hero panel ── */
+  .rp-hero { background: #0a0a0a; border-bottom: 1px solid rgba(212,175,55,0.12); }
+  .rp-headline { font-size: clamp(2rem, 9vw, 3rem); letter-spacing: 3px; margin-bottom: 18px; }
+  .rp-body { font-size: 0.9rem; margin-bottom: 28px; }
+  .rp-cta { padding: 13px 26px; font-size: 0.68rem; display: inline-flex; }
+  .rp-scroll-hint { margin-top: 32px; }
+  .hero-shapes { display: none; }
 
-  /* Form panel */
-  .rp-form { padding-top: 56px; }
-  .rp-form .rp-inner { max-width: 100%; }
-  .rp-form .df-card-input { font-size: 0.92rem; padding: 14px 16px; }
-  .rp-form .df-card-label { font-size: 0.65rem; }
-  .df-captcha-box { max-width: 100%; }
+  /* ── Form panel ── */
+  .rp-form {
+    background: #ffffff;
+    overflow: visible;
+    padding: 0;
+    border-bottom: 1px solid rgba(212,175,55,0.12);
+  }
+  .rp-form .rp-inner {
+    padding: 44px 22px 36px;
+    height: auto;
+    overflow: visible;
+    max-width: 100%;
+  }
+  .rp-form .rp-section-title { font-size: clamp(1.1rem, 4vw, 1.6rem); }
+  .rp-form .rp-eyebrow { font-size: 0.6rem; letter-spacing: 5px; }
 
-  /* Split row on mobile: stack fields */
-  .rp-form .df-row-split { grid-template-columns: 1fr; gap: 16px; }
-  .rp-form .df-row-three { grid-template-columns: 1fr; }
+  /* Stack all field rows to single column */
+  .rp-form .df-row        { margin-bottom: 10px; }
+  .rp-form .df-row-split  { grid-template-columns: 1fr; gap: 10px; margin-bottom: 10px; }
+  .rp-form .df-row-three  { grid-template-columns: 1fr; }
+  .rp-form .df-row-four   { grid-template-columns: 1fr 1fr; gap: 10px; }
 
-  /* Headline */
-  .rp-headline { font-size: clamp(2rem, 8vw, 3.2rem); }
-  .rp-section-title { font-size: clamp(1.2rem, 4vw, 1.8rem); }
+  /* Bigger tap targets */
+  .df-card-input  { height: 48px; font-size: 0.92rem; padding: 13px 14px; }
+  .df-card-textarea { min-height: 100px; height: auto; font-size: 0.9rem; }
+  .df-country-select { height: 48px; font-size: 0.82rem; }
+  .df-field-card  { gap: 4px; }
+  .df-card-label  { font-size: 0.65rem; }
+  .df-phone-row   { gap: 8px; }
 
-  /* Contact blocks */
-  .contact-blocks { grid-template-columns: 1fr; gap: 16px; }
-  .contact-block:nth-child(3) { grid-column: span 1; }
-
-  /* Services */
-  .services-list { gap: 12px; }
-  .service-row { padding: 16px 14px; }
-  .service-num { font-size: 0.9rem; }
-  .service-content h3 { font-size: 0.78rem; }
-  .service-content p { font-size: 0.7rem; }
-
-  /* Footer */
-  .rp-footer { padding: 56px 28px 48px; min-height: auto; }
-  .footer-top { flex-direction: column; gap: 28px; }
-  .footer-brand { flex: none; }
-  .footer-cols { grid-template-columns: 1fr 1fr; gap: 24px; }
-  .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
+  /* Full-width submit on mobile */
+  .df-submit-row  { justify-content: stretch; }
+  .df-card-submit {
+    width: 100%; max-width: 100%;
+    justify-content: center;
+    padding: 15px 24px;
+    font-size: 0.68rem;
+  }
 
   /* Captcha */
   .df-captcha-box { max-width: 100%; }
+
+  /* ── Contact info panel ── */
+  .rp-info { background: #0f0f0f; }
+  .rp-info .rp-section-title { color: #fff; }
+  .rp-info .rp-eyebrow { color: rgba(212,175,55,0.85); }
+  .contact-blocks { grid-template-columns: 1fr; gap: 20px; }
+  .contact-block:nth-child(3) { grid-column: span 1; }
+
+  /* ── Services panel ── */
+  .rp-services { background: #0a0a0a; }
+  .services-list { gap: 10px; }
+  .service-row { padding: 16px 14px; gap: 14px; }
+  .service-num { font-size: 0.85rem; }
+  .service-content h3 { font-size: 0.78rem; }
+  .service-content p  { font-size: 0.7rem; }
+
+  /* ── Footer panel ── */
+  .rp-footer { min-height: auto; padding: 52px 24px 48px; background: #050505; }
+  .footer-top { flex-direction: column; gap: 28px; }
+  .footer-brand { flex: none; }
+  .footer-cols { grid-template-columns: 1fr 1fr; gap: 20px; }
+  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+
+  /* Hide desktop-only UI */
+  .csp-dot-nav { display: none; }
+  .scroll-progress-bar { display: none; }
+
+  /* Inner content always visible */
+  .rp-inner { opacity: 1 !important; visibility: visible !important; }
+  .rp-section-title { color: #fff; }
+  .rp-form .rp-section-title { color: #111; }
+
+  /* Navbar height offset */
+  .csp-wrapper--mobile { margin-top: 0; padding-top: 56px; }
 }
 
-/* ── Mobile small (≤ 480px) ── */
+/* ── Mobile (≤ 480px) ── */
 @media (max-width: 480px) {
-  .right-panel { padding: 48px 20px 48px; }
-  .rp-form { padding-top: 48px; }
-  .rp-headline { font-size: clamp(1.8rem, 9vw, 2.6rem); letter-spacing: 2px; }
-  .rp-section-title { font-size: clamp(1rem, 4.5vw, 1.5rem); letter-spacing: 2px; }
-  .rp-body { font-size: 0.88rem; }
-  .rp-cta { padding: 13px 24px; font-size: 0.65rem; }
-  .rp-eyebrow { font-size: 0.55rem; letter-spacing: 3px; }
-  .artwork-caption-title { font-size: 1rem; }
-  .cb-title { font-size: 0.92rem; }
-  .footer-logo { font-size: 1.2rem; }
-  .footer-cols { grid-template-columns: 1fr; gap: 20px; }
-  .df-captcha-box { padding: 12px 14px; gap: 12px; }
-  .df-captcha-label { font-size: 0.75rem; }
+  .right-panel { padding: 40px 16px 48px; }
+
+  .rp-form .rp-inner  { padding: 36px 16px 28px; }
+  .rp-form .df-row-split { grid-template-columns: 1fr; gap: 8px; margin-bottom: 8px; }
+  .rp-form .df-row-four  { grid-template-columns: 1fr; }
+  .rp-form .df-row       { margin-bottom: 8px; }
+
+  .df-card-input    { height: 44px; font-size: 0.88rem; padding: 11px 12px; }
+  .df-country-select { height: 44px; width: 80px; font-size: 0.76rem; }
+  .df-card-textarea  { min-height: 88px; }
+  .df-phone-row      { gap: 6px; }
+
+  .df-card-submit    { padding: 13px 18px; font-size: 0.65rem; letter-spacing: 2px; }
+  .df-captcha-box    { padding: 12px 12px; gap: 10px; }
+  .df-captcha-label  { font-size: 0.72rem; }
+
+  .rp-headline         { font-size: clamp(1.8rem, 9vw, 2.6rem); letter-spacing: 2px; }
+  .rp-section-title    { font-size: clamp(1rem, 5vw, 1.4rem); letter-spacing: 2px; }
+  .rp-body             { font-size: 0.85rem; }
+  .rp-cta              { padding: 12px 22px; font-size: 0.64rem; }
+  .rp-eyebrow          { font-size: 0.54rem; letter-spacing: 3px; }
+  .artwork-caption-title { font-size: 0.95rem; }
+  .cb-title            { font-size: 0.9rem; }
+  .footer-logo         { font-size: 1.1rem; }
+  .footer-cols         { grid-template-columns: 1fr; gap: 20px; }
+}
+
+/* ── Small mobile (≤ 360px) ── */
+@media (max-width: 360px) {
+  .right-panel       { padding: 32px 14px 40px; }
+  .rp-form .rp-inner { padding: 30px 14px 24px; }
+
+  .df-card-input       { height: 42px; font-size: 0.84rem; padding: 10px 10px; }
+  .df-country-select   { width: 74px; font-size: 0.72rem; }
+  .df-card-label       { font-size: 0.57rem; letter-spacing: 1.5px; }
+  .df-card-submit      { font-size: 0.62rem; padding: 12px 14px; letter-spacing: 2px; }
+
+  .rp-section-title    { font-size: clamp(0.9rem, 5.5vw, 1.2rem); letter-spacing: 1.5px; }
+  .rp-eyebrow          { font-size: 0.5rem; letter-spacing: 2px; }
+  .rp-headline         { font-size: clamp(1.6rem, 10vw, 2.2rem); }
 }

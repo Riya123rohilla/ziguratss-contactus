@@ -4,6 +4,8 @@ import ContactForm from '../components/ContactForm';
 import Navbar from '../components/Navbar';
 import '../styles/contact-scroll.css';
 
+const isMobileDevice = () => window.innerWidth <= 768;
+
 const ARTWORKS = [
   { src: 'https://zigguratss.com/public/images/artworks/1482/propose_1482_01.jpg',        title: 'Propose',        artist: 'Uttam Manna'       },
   { src: 'https://zigguratss.com/public/images/artworks/1481/eternal_melody_1481_01.jpg', title: 'Eternal Melody', artist: 'Zigguratss Artist' },
@@ -31,6 +33,14 @@ const Contact = () => {
   const tlRef          = useRef(null);
 
   const [current, setCurrent] = useState(0);
+  const [isMobile, setIsMobile] = useState(isMobileDevice);
+
+  /* ── track resize ── */
+  useEffect(() => {
+    const onResize = () => setIsMobile(isMobileDevice());
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   /* ── swap artwork + caption ── */
   const swapImage = useCallback((i) => {
@@ -120,6 +130,9 @@ const Contact = () => {
   useEffect(() => { goToRef.current = goTo; }, [goTo]);
 
   useEffect(() => {
+    /* ── Skip panel system on mobile — panels scroll naturally ── */
+    if (isMobileDevice()) return;
+
     const panels = panelRefs.current.filter(Boolean);
     gsap.set(panels, { autoAlpha: 0, filter: 'blur(0px)', scale: 1, zIndex: 0 });
     gsap.set(panels[0], { autoAlpha: 1, zIndex: 1 });
@@ -146,23 +159,12 @@ const Contact = () => {
       if (['ArrowUp',   'PageUp'  ].includes(e.key)) { e.preventDefault(); goToRef.current(currentRef.current - 1); }
     };
 
-    let touchStartY = 0;
-    const onTouchStart = (e) => { touchStartY = e.touches[0].clientY; };
-    const onTouchEnd   = (e) => {
-      const diff = touchStartY - e.changedTouches[0].clientY;
-      if (Math.abs(diff) > 48) goToRef.current(currentRef.current + (diff > 0 ? 1 : -1));
-    };
-
-    window.addEventListener('wheel',      onWheel,      { passive: false });
-    window.addEventListener('keydown',    onKey);
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchend',   onTouchEnd,   { passive: true });
+    window.addEventListener('wheel',   onWheel, { passive: false });
+    window.addEventListener('keydown', onKey);
 
     return () => {
-      window.removeEventListener('wheel',      onWheel);
-      window.removeEventListener('keydown',    onKey);
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchend',   onTouchEnd);
+      window.removeEventListener('wheel',   onWheel);
+      window.removeEventListener('keydown', onKey);
       if (tlRef.current) tlRef.current.kill();
     };
   }, []);
@@ -171,19 +173,23 @@ const Contact = () => {
     <>
       <Navbar />
 
-      <div className="scroll-progress-bar">
-        <div className="scroll-progress-fill" ref={progressRef}></div>
-      </div>
+      {!isMobile && (
+        <div className="scroll-progress-bar">
+          <div className="scroll-progress-fill" ref={progressRef}></div>
+        </div>
+      )}
 
-      <div className="csp-blur-overlay" ref={blurOverlayRef}></div>
+      {!isMobile && <div className="csp-blur-overlay" ref={blurOverlayRef}></div>}
 
-      <nav className="csp-dot-nav">
-        {Array.from({ length: TOTAL_PANELS }).map((_, i) => (
-          <button key={i} className={`csp-dot${current === i ? ' active' : ''}`} onClick={() => goTo(i)} aria-label={`Panel ${i + 1}`} />
-        ))}
-      </nav>
+      {!isMobile && (
+        <nav className="csp-dot-nav">
+          {Array.from({ length: TOTAL_PANELS }).map((_, i) => (
+            <button key={i} className={`csp-dot${current === i ? ' active' : ''}`} onClick={() => goTo(i)} aria-label={`Panel ${i + 1}`} />
+          ))}
+        </nav>
+      )}
 
-      <div className="csp-wrapper">
+      <div className={`csp-wrapper${isMobile ? ' csp-wrapper--mobile' : ''}`}>
 
         {/* ── LEFT sticky artwork ── */}
         <div className="csp-left">
@@ -215,18 +221,28 @@ const Contact = () => {
               <span className="rp-eyebrow">ZIGGURATSS ARTWORK</span>
               <h1 className="rp-headline">CREATE<br /><span className="rp-gold">SOMETHING</span><br />EXTRAORDINARY</h1>
               <p className="rp-body">Every masterpiece begins with a conversation.<br />Let's start yours.</p>
-              <button className="rp-cta" onClick={() => goTo(1)}>
-                <span>Get in Touch</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                </svg>
-              </button>
+              {!isMobile && (
+                <button className="rp-cta" onClick={() => goTo(1)}>
+                  <span>Get in Touch</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                </button>
+              )}
+              {isMobile && (
+                <a href="#panel-form" className="rp-cta">
+                  <span>Get in Touch</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                  </svg>
+                </a>
+              )}
               <div className="rp-scroll-hint"><span></span>Scroll to explore</div>
             </div>
           </div>
 
           {/* Panel 1 — Form */}
-          <div className="right-panel rp-form" ref={el => (panelRefs.current[1] = el)}>
+          <div className="right-panel rp-form" id="panel-form" ref={el => (panelRefs.current[1] = el)}>
             <div className="rp-inner">
               <span className="rp-eyebrow">ZIGGURATSS ARTWORK</span>
               <h2 className="rp-section-title">EVERY ARTWORK STARTS <em>with a</em> VISION.<br />LET'S START YOURS</h2>
