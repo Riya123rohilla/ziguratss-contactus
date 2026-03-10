@@ -20,7 +20,7 @@ const FALLBACK = [
   'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80',
 ];
 
-const TOTAL_PANELS = 5;
+const TOTAL_PANELS = 4;
 
 const Contact = () => {
   const imgRefs        = useRef([]);
@@ -383,67 +383,6 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Panel 4 — Footer */}
-          <div className="right-panel rp-footer" ref={el => (panelRefs.current[4] = el)}>
-            <div className="rp-inner rp-inner--wide footer-inner">
-
-              {/* Top row */}
-              <div className="footer-top">
-                <div className="footer-brand">
-                  <p className="footer-logo">ZIGGURATSS</p>
-                  <p className="footer-tagline">Where Art Meets Vision</p>
-                  <div className="footer-gold-line"></div>
-                  <p className="footer-desc">Curating extraordinary artwork that transforms spaces and inspires minds. Every piece tells a story.</p>
-                </div>
-
-                <div className="footer-cols">
-                  <div className="footer-col">
-                    <p className="footer-col-heading">CONTACT</p>
-                    <a href="mailto:contact@zigguratss.com" className="footer-link">contact@zigguratss.com</a>
-                    <a href="tel:+917838535496" className="footer-link">+91 7838535496</a>
-                    <p className="footer-link-muted">New Delhi, India</p>
-                  </div>
-                  <div className="footer-col">
-                    <p className="footer-col-heading">FOLLOW</p>
-                    <a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="footer-link">Instagram</a>
-                    <a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer" className="footer-link">Facebook</a>
-                    <a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer" className="footer-link">LinkedIn</a>
-                    <a href="https://in.pinterest.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="footer-link">Pinterest</a>
-                  </div>
-                  <div className="footer-col">
-                    <p className="footer-col-heading">EXPLORE</p>
-                    <a href="/" className="footer-link">Home</a>
-                    <a href="/gallery" className="footer-link">Gallery</a>
-                    <a href="/about" className="footer-link">About Us</a>
-                    <a href="/contact" className="footer-link">Contact</a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Divider */}
-              <div className="footer-divider"></div>
-
-              {/* Bottom row */}
-              <div className="footer-bottom">
-                <p className="footer-copy">© {new Date().getFullYear()} Zigguratss Artwork LLP. All rights reserved.</p>
-                <div className="footer-socials">
-                  <a href="https://www.instagram.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Instagram">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-                  </a>
-                  <a href="https://www.facebook.com/people/Zigguratss-Artwork-LLP/100090657829166/" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Facebook">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-                  </a>
-                  <a href="https://www.linkedin.com/company/zigguratssartwork/about/" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="LinkedIn">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-                  </a>
-                  <a href="https://in.pinterest.com/zigguratss/" target="_blank" rel="noopener noreferrer" className="footer-social-icon" aria-label="Pinterest">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
-                  </a>
-                </div>
-              </div>
-
-            </div>
-          </div>
 
         </div>{/* /csp-right */}
       </div>{/* /csp-wrapper */}

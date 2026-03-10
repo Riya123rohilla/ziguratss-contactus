@@ -1037,151 +1037,16 @@ html, body {
 .cb-map-link:hover span { transform: translateX(3px); }
 
 /* ════════════════════════════════════════════════
-   PANEL 4 — FOOTER (dark)
-════════════════════════════════════════════════ */
-.rp-footer {
-  background: #080808;
-  align-items: center;
-  padding: 80px 72px;
-}
-
-.rp-footer::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #d4af37, transparent);
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.footer-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  max-width: 100%;
-}
-
-.footer-top {
-  display: flex;
-  gap: 64px;
-  align-items: flex-start;
-  margin-bottom: 48px;
-}
-
-.footer-brand {
-  flex: 0 0 260px;
-}
-.footer-logo {
-  font-size: 1.5rem;
-  font-weight: 200;
-  color: #fff;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-.footer-tagline {
-  font-size: 0.62rem;
-  letter-spacing: 3px;
-  color: #d4af37;
-  text-transform: uppercase;
-  opacity: 0.8;
-  margin-bottom: 20px;
-}
-.footer-gold-line {
-  width: 48px;
-  height: 1px;
-  background: linear-gradient(90deg, #d4af37, transparent);
-  margin-bottom: 20px;
-}
-.footer-desc {
-  font-size: 0.75rem;
-  color: rgba(255,255,255,0.3);
-  line-height: 1.8;
-  letter-spacing: 0.3px;
-}
-
-.footer-cols {
-  flex: 1;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
-}
-.footer-col-heading {
-  font-size: 0.55rem;
-  letter-spacing: 4px;
-  color: #d4af37;
-  text-transform: uppercase;
-  margin-bottom: 18px;
-  opacity: 0.85;
-}
-.footer-link {
-  display: block;
-  font-size: 0.76rem;
-  color: rgba(255,255,255,0.45);
-  text-decoration: none;
-  letter-spacing: 0.5px;
-  line-height: 2.2;
-  transition: color 0.2s;
-}
-.footer-link:hover { color: #d4af37; }
-.footer-link-muted {
-  font-size: 0.76rem;
-  color: rgba(255,255,255,0.2);
-  letter-spacing: 0.5px;
-  line-height: 2.2;
-}
-
-.footer-divider {
-  width: 100%;
-  height: 1px;
-  background: rgba(255,255,255,0.06);
-  margin-bottom: 28px;
-}
-
-.footer-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.footer-copy {
-  font-size: 0.62rem;
-  color: rgba(255,255,255,0.2);
-  letter-spacing: 1px;
-}
-.footer-socials {
-  display: flex;
-  gap: 14px;
-  align-items: center;
-}
-.footer-social-icon {
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 50%;
-  color: rgba(255,255,255,0.3);
-  text-decoration: none;
-  transition: border-color 0.25s, color 0.25s, background 0.25s;
-}
-.footer-social-icon svg { width: 13px; height: 13px; }
-.footer-social-icon:hover { border-color: #d4af37; color: #d4af37; background: rgba(212,175,55,0.08); }
-
-/* ════════════════════════════════════════════════
    RESPONSIVE additions
 ════════════════════════════════════════════════ */
 @media (max-width: 1100px) {
   .contact-blocks { grid-template-columns: 1fr 1fr; }
   .contact-block:nth-child(3) { grid-column: span 2; }
-  .footer-top { flex-direction: column; gap: 36px; }
-  .footer-brand { flex: none; }
 }
 
 @media (max-width: 768px) {
   .contact-blocks { grid-template-columns: 1fr; }
   .contact-block:nth-child(3) { grid-column: span 1; }
-  .footer-cols { grid-template-columns: 1fr 1fr; }
-  .rp-footer { padding: 70px 24px 60px; }
-  .footer-bottom { flex-direction: column; gap: 16px; text-align: center; }
 }
 
 /* ════════════════════════════════════════════════
@@ -1423,13 +1288,6 @@ html, body {
   .service-content h3 { font-size: 0.78rem; }
   .service-content p  { font-size: 0.7rem; }
 
-  /* ── Footer panel ── */
-  .rp-footer { min-height: auto; padding: 52px 24px 48px; background: #050505; }
-  .footer-top { flex-direction: column; gap: 28px; }
-  .footer-brand { flex: none; }
-  .footer-cols { grid-template-columns: 1fr 1fr; gap: 20px; }
-  .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
-
   /* Hide desktop-only UI */
   .csp-dot-nav { display: none; }
   .scroll-progress-bar { display: none; }
@@ -1468,8 +1326,6 @@ html, body {
   .rp-eyebrow          { font-size: 0.54rem; letter-spacing: 3px; }
   .artwork-caption-title { font-size: 0.95rem; }
   .cb-title            { font-size: 0.9rem; }
-  .footer-logo         { font-size: 1.1rem; }
-  .footer-cols         { grid-template-columns: 1fr; gap: 20px; }
 }
 
 /* ── Small mobile (≤ 360px) ── */
