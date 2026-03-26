@@ -33,14 +33,7 @@ const Contact = () => {
   const tlRef          = useRef(null);
 
   const [current, setCurrent] = useState(0);
-  const [isMobile, setIsMobile] = useState(isMobileDevice);
-
-  /* ── track resize ── */
-  useEffect(() => {
-    const onResize = () => setIsMobile(isMobileDevice());
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
+  const isMobile = isMobileDevice();
 
   /* ── swap artwork + caption ── */
   const swapImage = useCallback((i) => {
@@ -131,7 +124,7 @@ const Contact = () => {
 
   useEffect(() => {
     /* ── Skip panel system on mobile — panels scroll naturally ── */
-    if (isMobileDevice()) return;
+    if (isMobile) return;
 
     const panels = panelRefs.current.filter(Boolean);
     gsap.set(panels, { autoAlpha: 0, filter: 'blur(0px)', scale: 1, zIndex: 0 });
@@ -143,12 +136,6 @@ const Contact = () => {
     if (progressRef.current) gsap.set(progressRef.current, { scaleX: 1 / TOTAL_PANELS });
 
     const onWheel = (e) => {
-      const panel = panelRefs.current[currentRef.current];
-      if (panel && panel.scrollHeight > panel.clientHeight) {
-        const atBottom = panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 2;
-        const atTop = panel.scrollTop <= 0;
-        if ((e.deltaY > 0 && !atBottom) || (e.deltaY < 0 && !atTop)) return;
-      }
       e.preventDefault();
       if (e.deltaY > 30) goToRef.current(currentRef.current + 1);
       else if (e.deltaY < -30) goToRef.current(currentRef.current - 1);
@@ -159,15 +146,15 @@ const Contact = () => {
       if (['ArrowUp',   'PageUp'  ].includes(e.key)) { e.preventDefault(); goToRef.current(currentRef.current - 1); }
     };
 
-    window.addEventListener('wheel',   onWheel, { passive: false });
+    window.addEventListener('wheel', onWheel, { passive: false });
     window.addEventListener('keydown', onKey);
-
+    
     return () => {
       window.removeEventListener('wheel',   onWheel);
       window.removeEventListener('keydown', onKey);
       if (tlRef.current) tlRef.current.kill();
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <>

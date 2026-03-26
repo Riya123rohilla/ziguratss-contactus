@@ -22,7 +22,7 @@ const ContactForm = () => {
     { code: '+44',  flag: '🇬🇧', name: 'UK' },
     { code: '+61',  flag: '🇦🇺', name: 'AU' },
     { code: '+971', flag: '🇦🇪', name: 'UAE' },
-    { code: '+65',  flag: '🇸�', name: 'SG' },
+    { code: '+65',  flag: '🇸🇬', name: 'SG' },
     { code: '+49',  flag: '🇩🇪', name: 'DE' },
     { code: '+33',  flag: '🇫🇷', name: 'FR' },
     { code: '+81',  flag: '🇯🇵', name: 'JP' },
@@ -33,7 +33,7 @@ const ContactForm = () => {
     { code: '+234', flag: '🇳🇬', name: 'NG' },
     { code: '+92',  flag: '🇵🇰', name: 'PK' },
     { code: '+880', flag: '🇧🇩', name: 'BD' },
-    { code: '+94',  flag: '��', name: 'LK' },
+    { code: '+94',  flag: '🇱🇰', name: 'LK' },
     { code: '+977', flag: '🇳🇵', name: 'NP' },
   ];
 

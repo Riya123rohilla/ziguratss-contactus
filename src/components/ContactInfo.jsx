@@ -11,6 +11,8 @@ const ContactInfo = () => {
   const [showMap, setShowMap] = useState(false);
 
   useEffect(() => {
+    if (!mapRef.current || !callBoxRef.current) return;
+
     gsap.fromTo(
       mapRef.current,
       { opacity: 0, x: 50 },
@@ -26,7 +28,6 @@ const ContactInfo = () => {
       }
     );
 
-    // Animate call box
     gsap.fromTo(
       callBoxRef.current,
       { opacity: 0, y: 30 },
@@ -69,7 +70,7 @@ const ContactInfo = () => {
               width="100%"
               height="400"
 
-              
+
               style={{ border: 0 }}
               allowFullScreen=""
               loading="lazy"
