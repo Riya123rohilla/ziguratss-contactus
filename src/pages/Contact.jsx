@@ -224,7 +224,7 @@ const Contact = () => {
                   </svg>
                 </a>
               )}
-              <div className="rp-scroll-hint"><span></span>Scroll to explore</div>
+              
             </div>
           </div>
 
