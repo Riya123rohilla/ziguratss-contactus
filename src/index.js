@@ -1,4 +1,5 @@
 import React from 'react';
+import './styles/responsive-patch.css';
 import ReactDOM from 'react-dom/client';
 import './styles/contact.css';
 import Contact from './pages/Contact';
