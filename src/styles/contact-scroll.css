@@ -1343,3 +1343,12 @@ html, body {
   .rp-eyebrow          { font-size: 0.5rem; letter-spacing: 2px; }
   .rp-headline         { font-size: clamp(1.6rem, 10vw, 2.2rem); }
 }
+
+@media (max-width: 768px) {
+  .csp-right { background: #faf9f7 !important; }
+  .rp-services { background: #faf9f7 !important; }
+  .rp-services .rp-section-title { color: #111 !important; }
+  .service-content h3 { color: #111 !important; }
+  .service-content p { color: rgba(0,0,0,0.6) !important; }
+  .service-row { border-color: rgba(0,0,0,0.08) !important; }
+}

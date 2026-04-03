@@ -3518,3 +3518,9 @@ body {
     height: 250px;
   }
 }
+html {
+  scroll-behavior: smooth !important;
+}
+.csp-wrapper--mobile {
+  scroll-behavior: smooth !important;
+}
