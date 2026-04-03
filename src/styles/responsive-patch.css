@@ -4,7 +4,45 @@
     box-shadow: none !important;
     z-index: 1000 !important;
 }
+/* =============================================
+   MOBILE & TABLET RESET (Under 1024px)
+   ============================================= */
+@media (max-width: 1024px) {
 
+  /* 1. Global Reset: Stop the "Black Leak" from the body */
+  html, body {
+    background-color: #f7f5f0 !important; /* Force the light theme base */
+    color: #111 !important; 
+  }
+
+  /* 2. Specific Section Fix: The "Vision Statement" should be a white card */
+  .vision-statement-section {
+    background-color: #ffffff !important; 
+    background-image: none !important; /* Remove any dark gradients */
+    color: #000000 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    padding: 60px 20px !important;
+  }
+
+  /* 3. Text Visibility: Ensure headers aren't white-on-white */
+  .vision-title, 
+  .rp-section-title,
+  .cb-title {
+    color: #000000 !important; 
+  }
+
+  /* 4. Form Labels: Make sure they are readable */
+  .df-card-label {
+    color: #333333 !important;
+  }
+
+  /* 5. Mobile Navbar: Keep it dark for contrast */
+  .navbar {
+    background-color: rgba(5, 5, 5, 0.95) !important;
+  }
+}
 .logo-box {
     background-color: rgba(5, 5, 5, 0.92) !important;
     
@@ -116,7 +154,39 @@
     padding-left: 36px;
 }
 
+@media (max-width: 1024px) {
+  /* =============================================
+     MASTER BACKGROUND & TEXT COLOR FIX
+     Concepts: Specificity and Inheritance Reset
+     ============================================= */
 
+  /* Force standard body/html view on mobile */
+  html,
+  body {
+    background-color: #f7f5f0 !important; /* Original light beige background */
+    color: #111 !important; /* Original text color */
+  }
+
+  /* Reset the specific section that turned black */
+  .vision-statement-section {
+    background: #ffffff !important; /* Resetting back to white card */
+    color: #000 !important;
+  }
+
+  /* Resetting specific headings/text that were also affected */
+  .vision-title {
+    color: #000 !important;
+  }
+
+  .with-text-vision {
+    color: #d4af37 !important; /* Keeping gold */
+  }
+
+  /* Reset the gold line expanding correctly */
+  .vision-underline {
+    margin: 40px auto 0 !important;
+  }
+}
 @media (min-width: 769px) and (max-width: 1024px) {
 
     html,
